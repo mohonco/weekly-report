@@ -242,7 +242,7 @@ export default function DashboardPage() {
             </h1>
             {lastUpdated && (
               <p className="text-[11px] text-gray-400 mt-0.5">
-                업데이트: {lastUpdated.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
+                업데이트: {lastUpdated.toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
               </p>
             )}
           </div>

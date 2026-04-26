@@ -190,6 +190,7 @@ function parseCSV(text: string): ParsedSheet {
 export default function DashboardPage() {
   const [sheet, setSheet] = useState<ParsedSheet | null>(null);
   const [selectedWeek, setSelectedWeek] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<"전체" | "진행중" | "완료">("전체");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -227,7 +228,9 @@ export default function DashboardPage() {
       : null;
 
   const sectionRows = (section: string) =>
-    (sheet?.rows ?? []).filter((r) => r.섹션 === section);
+    (sheet?.rows ?? []).filter(
+      (r) => r.섹션 === section && (statusFilter === "전체" || r.상태 === statusFilter)
+    );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -251,6 +254,22 @@ export default function DashboardPage() {
               </select>
             </div>
           )}
+
+          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+            {(["전체", "진행중", "완료"] as const).map((s) => (
+              <button
+                key={s}
+                onClick={() => setStatusFilter(s)}
+                className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                  statusFilter === s
+                    ? "bg-white text-gray-900 shadow-sm font-medium"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
 
           <div className="flex items-center gap-3 ml-auto">
             {lastUpdated && (

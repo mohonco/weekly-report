@@ -28,6 +28,12 @@ const SECTION_COLORS: Record<string, { header: string }> = {
   기타:                 { header: "bg-[#3D5C3D] text-white" },
 };
 
+function formatDate(date: string): string {
+  const match = date.match(/\d{4}-(\d{2})-(\d{2})/);
+  if (match) return `${Number(match[1])}/${Number(match[2])}`;
+  return date;
+}
+
 function isWeekKey(col: string) {
   return /^\d{4}-\d{2}-\d{2}$/.test(col.trim());
 }
@@ -80,12 +86,10 @@ function SectionTable({
   section,
   rows,
   currentWeek,
-  prevWeek,
 }: {
   section: string;
   rows: WorkRow[];
   currentWeek: string;
-  prevWeek: string | null;
 }) {
   const color = SECTION_COLORS[section] ?? { header: "bg-gray-700 text-white" };
   const hasGuestCol = rows.some((r) => r.고객사명);
@@ -93,29 +97,22 @@ function SectionTable({
 
   return (
     <div className="mb-8">
-      <h2 className="text-base font-bold mb-2 text-gray-800">{section}</h2>
+      <h2 className="text-[19px] font-bold mb-2 text-gray-800">{section}</h2>
       <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-        <table className="w-full text-sm border-collapse min-w-[700px]">
+        <table className="w-full text-[15px] border-collapse min-w-[700px]">
           <thead>
             <tr className={color.header}>
-              <th className="px-3 py-2 text-left font-medium w-16">상태</th>
+              <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">상태</th>
               {hasGubunCol && (
-                <th className="px-3 py-2 text-left font-medium w-20">구분</th>
+                <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">구분</th>
               )}
               {hasGuestCol && (
-                <th className="px-3 py-2 text-left font-medium w-28">고객사명</th>
+                <th className="px-3 py-2 text-center font-medium w-36">고객사명</th>
               )}
-              <th className="px-3 py-2 text-left font-medium">프로젝트명</th>
-              <th className="px-3 py-2 text-left font-medium w-24">착수</th>
-              <th className="px-3 py-2 text-left font-medium w-24">마감</th>
-              <th className="px-3 py-2 text-left font-medium w-60">
-                {formatWeekLabel(currentWeek)}
-              </th>
-              {prevWeek && (
-                <th className="px-3 py-2 text-left font-medium w-60 opacity-70">
-                  {formatWeekLabel(prevWeek)}
-                </th>
-              )}
+              <th className="px-3 py-2 text-center font-medium w-[190px]">프로젝트명</th>
+              <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">착수</th>
+              <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">마감</th>
+              <th className="px-3 py-2 text-center font-medium w-60">추진 내용</th>
             </tr>
           </thead>
           <tbody>
@@ -128,20 +125,19 @@ function SectionTable({
                     : "bg-white hover:bg-gray-50/60"
                 }`}
               >
-                <td className="px-3 py-3 align-top">
+                <td className="px-3 py-3 align-top text-center">
                   <StatusBadge status={row.상태} />
                 </td>
                 {hasGubunCol && (
-                  <td className="px-3 py-3 text-gray-500 align-top text-xs">{row.구분}</td>
+                  <td className="px-3 py-3 text-gray-500 align-top text-sm text-center">{row.구분}</td>
                 )}
                 {hasGuestCol && (
                   <td className="px-3 py-3 text-gray-700 align-top font-medium">{row.고객사명}</td>
                 )}
                 <td className="px-3 py-3 text-gray-800 align-top">{row.프로젝트명}</td>
-                <td className="px-3 py-3 text-gray-400 align-top text-xs whitespace-nowrap">{row.착수}</td>
-                <td className="px-3 py-3 text-gray-400 align-top text-xs whitespace-nowrap">{row.마감}</td>
+                <td className="px-3 py-3 text-gray-400 align-top text-sm whitespace-nowrap text-center">{formatDate(row.착수)}</td>
+                <td className="px-3 py-3 text-gray-400 align-top text-sm whitespace-nowrap text-center">{formatDate(row.마감)}</td>
                 <WeekCell content={row.weeks[currentWeek] ?? ""} />
-                {prevWeek && <WeekCell content={row.weeks[prevWeek] ?? ""} />}
               </tr>
             ))}
             {rows.length === 0 && (
@@ -238,67 +234,57 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-4 flex-wrap">
-          <h1 className="text-lg font-bold text-gray-900">
-            {sheet?.title ?? "주간 업무 현황"}
-          </h1>
-
-          {sheet && sheet.weekKeys.length > 0 && (
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-500">주차</label>
-              <select
-                value={selectedWeek}
-                onChange={(e) => setSelectedWeek(e.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-              >
-                {sheet.weekKeys.map((k) => (
-                  <option key={k} value={k}>
-                    {formatWeekLabel(k)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-            {(["전체", "진행중", "완료"] as const).map((s) => (
-              <button
-                key={s}
-                onClick={() => setStatusFilter(s)}
-                className={`px-3 py-1 text-sm rounded-md transition-colors ${
-                  statusFilter === s
-                    ? "bg-white text-gray-900 shadow-sm font-medium"
-                    : "text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3 ml-auto">
+      <header className="bg-gray-800 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-sm font-semibold text-white">
+              {sheet?.title ?? "주간 업무 현황"}
+            </h1>
             {lastUpdated && (
-              <span className="text-xs text-gray-400">
+              <p className="text-[11px] text-gray-400 mt-0.5">
                 업데이트: {lastUpdated.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
-              </span>
+              </p>
             )}
-            <button
-              onClick={() => loadData(true)}
-              disabled={refreshing || loading}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-40 transition-colors"
-            >
-              <svg className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              새로고침
-            </button>
           </div>
 
-          {loading && (
-            <span className="text-sm text-gray-400 animate-pulse">불러오는 중…</span>
-          )}
+          <div className="flex items-center gap-3">
+            {sheet && sheet.weekKeys.length > 0 && (
+              <div className="flex items-center gap-1.5">
+                <label className="text-xs text-gray-500">주차</label>
+                <select
+                  value={selectedWeek}
+                  onChange={(e) => setSelectedWeek(e.target.value)}
+                  className="text-xs bg-transparent text-gray-300 focus:outline-none cursor-pointer"
+                >
+                  {sheet.weekKeys.map((k) => (
+                    <option key={k} value={k} className="bg-gray-800 text-white">
+                      {formatWeekLabel(k)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            <div className="w-px h-3 bg-gray-600" />
+
+            <div className="flex items-center gap-3">
+              {(["전체", "진행중", "완료"] as const).map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setStatusFilter(s)}
+                  className={`text-xs transition-colors ${
+                    statusFilter === s
+                      ? "text-white font-semibold"
+                      : "text-gray-500 hover:text-gray-300"
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
+
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-8">
@@ -315,7 +301,6 @@ export default function DashboardPage() {
               section={section}
               rows={sectionRows(section)}
               currentWeek={selectedWeek}
-              prevWeek={prevWeek}
             />
           ))
         }

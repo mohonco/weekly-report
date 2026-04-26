@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>디자인 미리보기</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css"/>
+<style>
+  * { font-family: 'Pretendard', sans-serif; }
+</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<!-- HEADER -->
+<header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-10">
+  <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <h1 class="text-lg font-bold text-slate-800">주간 업무 현황</h1>
+      <div class="flex items-center gap-2">
+        <label class="text-sm text-slate-400">주차</label>
+        <select class="border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-sm">
+          <option>4월 4주 (4/27-5/1)</option>
+          <option>4월 3주 (4/20-4/24)</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <!-- 상태 필터: 세그먼트 버튼 스타일 -->
+      <div class="flex items-center bg-slate-100 rounded-lg p-1 gap-0.5">
+        <button class="px-3 py-1 text-sm rounded-md bg-white text-slate-800 font-medium shadow-sm">전체</button>
+        <button class="px-3 py-1 text-sm rounded-md text-slate-500 hover:text-slate-700">진행중</button>
+        <button class="px-3 py-1 text-sm rounded-md text-slate-500 hover:text-slate-700">완료</button>
+      </div>
+      <div class="h-4 w-px bg-slate-200"></div>
+      <span class="text-xs text-slate-400">업데이트: 오후 09:08</span>
+      <button class="flex items-center gap-1.5 px-3 py-1.5 text-sm text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 shadow-sm transition-colors">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        새로고침
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+  <!-- 섹션 1 -->
+  <div>
+    <div class="flex items-center gap-2 mb-3">
+      <div class="w-1 h-5 rounded-full bg-rose-500"></div>
+      <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wide">하이브리드러닝 제안</h2>
+      <span class="text-xs bg-rose-50 text-rose-600 border border-rose-200 px-2 py-0.5 rounded-full font-medium">3건</span>
+    </div>
+    <div class="rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+      <table class="w-full text-[15px] border-collapse">
+        <thead>
+          <tr class="bg-slate-700 text-white">
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-px whitespace-nowrap">상태</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-px whitespace-nowrap">구분</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-36">고객사명</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-[190px]">프로젝트명</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-px whitespace-nowrap">착수</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-px whitespace-nowrap">마감</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm">추진 내용</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t border-slate-100 bg-white hover:bg-slate-50/60 transition-colors">
+            <td class="px-3 py-3 text-center align-top">
+              <span class="inline-block px-2 py-0.5 text-xs rounded-full bg-emerald-500 text-white font-medium">진행중</span>
+            </td>
+            <td class="px-3 py-3 text-center text-slate-500 align-top text-sm">사기업</td>
+            <td class="px-3 py-3 text-slate-700 align-top font-medium">JT친애저축은행</td>
+            <td class="px-3 py-3 text-slate-800 align-top">대리급/중간관리자급 승진자 교육 제안</td>
+            <td class="px-3 py-3 text-center text-slate-400 align-top text-sm whitespace-nowrap">4/20</td>
+            <td class="px-3 py-3 text-center text-slate-400 align-top text-sm whitespace-nowrap">4/22</td>
+            <td class="px-3 py-3 text-slate-600 align-top text-sm"><span class="block">· 수주 여부 회신 대기</span></td>
+          </tr>
+          <tr class="border-t border-slate-100 bg-slate-50/40 hover:bg-slate-50/60 transition-colors">
+            <td class="px-3 py-3 text-center align-top">
+              <span class="inline-block px-2 py-0.5 text-xs rounded-full bg-emerald-500 text-white font-medium">진행중</span>
+            </td>
+            <td class="px-3 py-3 text-center text-slate-500 align-top text-sm">사기업</td>
+            <td class="px-3 py-3 text-slate-700 align-top font-medium">대한산업안전협회(KISA)</td>
+            <td class="px-3 py-3 text-slate-800 align-top">2026년 계층별 역량강화교육 제안</td>
+            <td class="px-3 py-3 text-center text-slate-400 align-top text-sm whitespace-nowrap">4/21</td>
+            <td class="px-3 py-3 text-center text-slate-400 align-top text-sm whitespace-nowrap">4/23</td>
+            <td class="px-3 py-3 text-slate-600 align-top text-sm"><span class="block">· 역량모델 검증 및 고도화 파트 작성</span><span class="block">· 제안 PT(4/28, 화)</span></td>
+          </tr>
+          <tr class="border-t border-slate-100 bg-white opacity-50">
+            <td class="px-3 py-3 text-center align-top">
+              <span class="inline-block px-2 py-0.5 text-xs rounded-full bg-slate-200 text-slate-500 font-medium">완료</span>
+            </td>
+            <td class="px-3 py-3 text-center text-slate-500 align-top text-sm">사기업</td>
+            <td class="px-3 py-3 text-slate-700 align-top font-medium">신세계남산</td>
+            <td class="px-3 py-3 text-slate-800 align-top">2026년 임원 교육 제안</td>
+            <td class="px-3 py-3 text-center text-slate-400 align-top text-sm whitespace-nowrap">4/27</td>
+            <td class="px-3 py-3 text-center text-slate-400 align-top text-sm whitespace-nowrap">4/29</td>
+            <td class="px-3 py-3 text-slate-600 align-top text-sm"><span class="block">· 제안서 작성(w/김경중님)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 섹션 2 -->
+  <div>
+    <div class="flex items-center gap-2 mb-3">
+      <div class="w-1 h-5 rounded-full bg-indigo-500"></div>
+      <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wide">APL</h2>
+      <span class="text-xs bg-indigo-50 text-indigo-600 border border-indigo-200 px-2 py-0.5 rounded-full font-medium">2건</span>
+    </div>
+    <div class="rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+      <table class="w-full text-[15px] border-collapse">
+        <thead>
+          <tr class="bg-slate-700 text-white">
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-px whitespace-nowrap">상태</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-px whitespace-nowrap">구분</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-[190px]">프로젝트명</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-px whitespace-nowrap">착수</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-px whitespace-nowrap">마감</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm">추진 내용</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t border-slate-100 bg-white hover:bg-slate-50/60 transition-colors">
+            <td class="px-3 py-3 text-center align-top">
+              <span class="inline-block px-2 py-0.5 text-xs rounded-full bg-emerald-500 text-white font-medium">진행중</span>
+            </td>
+            <td class="px-3 py-3 text-center text-slate-500 align-top text-sm">PMO</td>
+            <td class="px-3 py-3 text-slate-800 align-top">질문으로 하는 기획력</td>
+            <td class="px-3 py-3 text-center text-slate-400 align-top text-sm whitespace-nowrap">4/20</td>
+            <td class="px-3 py-3 text-center text-slate-400 align-top text-sm whitespace-nowrap">4/22</td>
+            <td class="px-3 py-3 text-slate-600 align-top text-sm"><span class="block">· 플랫폼 회의 참석</span><span class="block">· 수행 서포트</span></td>
+          </tr>
+          <tr class="border-t border-slate-100 bg-slate-50/40 hover:bg-slate-50/60 transition-colors">
+            <td class="px-3 py-3 text-center align-top">
+              <span class="inline-block px-2 py-0.5 text-xs rounded-full bg-emerald-500 text-white font-medium">진행중</span>
+            </td>
+            <td class="px-3 py-3 text-center text-slate-500 align-top text-sm">일반</td>
+            <td class="px-3 py-3 text-slate-800 align-top">마이 리더십 플레이북</td>
+            <td class="px-3 py-3 text-center text-slate-400 align-top text-sm whitespace-nowrap">4/21</td>
+            <td class="px-3 py-3 text-center text-slate-400 align-top text-sm whitespace-nowrap">4/23</td>
+            <td class="px-3 py-3 text-slate-600 align-top text-sm"><span class="block">· 관련 업무 인수</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 섹션 3 -->
+  <div>
+    <div class="flex items-center gap-2 mb-3">
+      <div class="w-1 h-5 rounded-full bg-teal-500"></div>
+      <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wide">기타</h2>
+      <span class="text-xs bg-teal-50 text-teal-600 border border-teal-200 px-2 py-0.5 rounded-full font-medium">1건</span>
+    </div>
+    <div class="rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+      <table class="w-full text-[15px] border-collapse">
+        <thead>
+          <tr class="bg-slate-700 text-white">
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-px whitespace-nowrap">상태</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-[190px]">프로젝트명</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-px whitespace-nowrap">착수</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm w-px whitespace-nowrap">마감</th>
+            <th class="px-3 py-2.5 text-center font-medium text-sm">추진 내용</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t border-slate-100 bg-white hover:bg-slate-50/60 transition-colors">
+            <td class="px-3 py-3 text-center align-top">
+              <span class="inline-block px-2 py-0.5 text-xs rounded-full bg-emerald-500 text-white font-medium">진행중</span>
+            </td>
+            <td class="px-3 py-3 text-slate-800 align-top">AI-Powered DC 월간X 참석</td>
+            <td class="px-3 py-3 text-center text-slate-400 align-top text-sm whitespace-nowrap">4/28</td>
+            <td class="px-3 py-3 text-center text-slate-400 align-top text-sm whitespace-nowrap">4/28</td>
+            <td class="px-3 py-3 text-slate-600 align-top text-sm"><span class="block">· 워크샵 참석 → APL 상품 스터디</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+</body>
+</html>

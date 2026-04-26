@@ -134,7 +134,7 @@ function SectionTable({
                 {hasGuestCol && (
                   <td className="px-3 py-3 text-gray-700 align-top font-medium">{row.고객사명}</td>
                 )}
-                <td className="px-3 py-3 text-gray-800 align-top">{row.프로젝트명}</td>
+                <td className={`px-3 py-3 text-gray-800 align-top font-bold ${!hasGuestCol ? "text-center" : ""}`}>{row.프로젝트명}</td>
                 <td className="px-3 py-3 text-gray-400 align-top text-sm whitespace-nowrap text-center">{formatDate(row.착수)}</td>
                 <td className="px-3 py-3 text-gray-400 align-top text-sm whitespace-nowrap text-center">{formatDate(row.마감)}</td>
                 <WeekCell content={row.weeks[currentWeek] ?? ""} />
@@ -203,10 +203,10 @@ export default function DashboardPage() {
       .then((r) => r.text())
       .then((text) => {
         const data = parseCSV(text);
-        setSheet((prev) => {
-          if (!prev && data.weekKeys.length > 0) setSelectedWeek(data.weekKeys[0]);
-          return data;
-        });
+        setSheet(data);
+        setSelectedWeek((prev) =>
+          !prev || !data.weekKeys.includes(prev) ? (data.weekKeys[0] ?? prev) : prev
+        );
         setLastUpdated(new Date());
         setError(null);
       })
@@ -267,20 +267,17 @@ export default function DashboardPage() {
 
             <div className="w-px h-3 bg-gray-600" />
 
-            <div className="flex items-center gap-3">
-              {(["전체", "진행중", "완료"] as const).map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setStatusFilter(s)}
-                  className={`text-xs transition-colors ${
-                    statusFilter === s
-                      ? "text-white font-semibold"
-                      : "text-gray-500 hover:text-gray-300"
-                  }`}
-                >
-                  {s}
-                </button>
-              ))}
+            <div className="flex items-center gap-1.5">
+              <label className="text-xs text-gray-500">상태</label>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as "전체" | "진행중" | "완료")}
+                className="text-xs bg-transparent text-gray-300 focus:outline-none cursor-pointer"
+              >
+                {(["전체", "진행중", "완료"] as const).map((s) => (
+                  <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

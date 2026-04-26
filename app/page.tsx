@@ -188,6 +188,8 @@ function parseCSV(text: string): ParsedSheet {
 }
 
 export default function DashboardPage() {
+  const [title, setTitle] = useState("주간 업무 현황");
+  const [editingTitle, setEditingTitle] = useState(false);
   const [sheet, setSheet] = useState<ParsedSheet | null>(null);
   const [selectedWeek, setSelectedWeek] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<"전체" | "진행중" | "완료">("전체");
@@ -215,6 +217,11 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
+    const saved = localStorage.getItem("dashboard-title");
+    if (saved) setTitle(saved);
+  }, []);
+
+  useEffect(() => {
     loadData();
     const interval = setInterval(() => loadData(), AUTO_REFRESH_MS);
     return () => clearInterval(interval);
@@ -236,7 +243,24 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-4 flex-wrap">
-          <h1 className="text-lg font-bold text-gray-900">주간 업무 현황</h1>
+          {editingTitle ? (
+            <input
+              autoFocus
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              onBlur={() => { setEditingTitle(false); localStorage.setItem("dashboard-title", title); }}
+              onKeyDown={(e) => { if (e.key === "Enter") { setEditingTitle(false); localStorage.setItem("dashboard-title", title); } }}
+              className="text-lg font-bold text-gray-900 border-b-2 border-blue-400 outline-none bg-transparent w-48"
+            />
+          ) : (
+            <h1
+              className="text-lg font-bold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
+              title="클릭해서 제목 수정"
+              onClick={() => setEditingTitle(true)}
+            >
+              {title}
+            </h1>
+          )}
 
           {sheet && sheet.weekKeys.length > 0 && (
             <div className="flex items-center gap-2">

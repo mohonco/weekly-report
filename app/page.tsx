@@ -17,6 +17,7 @@ interface WorkRow {
 interface ParsedSheet {
   rows: WorkRow[];
   weekKeys: string[];
+  title: string;
 }
 
 const SECTIONS = ["하이브리드러닝 제안", "APL", "기타"];
@@ -167,8 +168,11 @@ function parseCSV(text: string): ParsedSheet {
   const headers = parsed.meta.fields ?? [];
   const weekKeys = headers.filter(isWeekKey).sort((a, b) => (a < b ? 1 : -1));
 
+  const configRow = parsed.data.find((r) => r["섹션"]?.trim() === "__설정__");
+  const title = configRow?.["프로젝트명"]?.trim() || "주간 업무 현황";
+
   const rows: WorkRow[] = parsed.data
-    .filter((r) => r["섹션"]?.trim())
+    .filter((r) => r["섹션"]?.trim() && r["섹션"]?.trim() !== "__설정__")
     .map((r) => {
       const weeks: Record<string, string> = {};
       weekKeys.forEach((k) => { weeks[k] = r[k]?.trim() ?? ""; });
@@ -184,12 +188,10 @@ function parseCSV(text: string): ParsedSheet {
       };
     });
 
-  return { rows, weekKeys };
+  return { rows, weekKeys, title };
 }
 
 export default function DashboardPage() {
-  const [title, setTitle] = useState("주간 업무 현황");
-  const [editingTitle, setEditingTitle] = useState(false);
   const [sheet, setSheet] = useState<ParsedSheet | null>(null);
   const [selectedWeek, setSelectedWeek] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<"전체" | "진행중" | "완료">("전체");
@@ -217,11 +219,6 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    const saved = localStorage.getItem("dashboard-title");
-    if (saved) setTitle(saved);
-  }, []);
-
-  useEffect(() => {
     loadData();
     const interval = setInterval(() => loadData(), AUTO_REFRESH_MS);
     return () => clearInterval(interval);
@@ -243,24 +240,9 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-4 flex-wrap">
-          {editingTitle ? (
-            <input
-              autoFocus
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              onBlur={() => { setEditingTitle(false); localStorage.setItem("dashboard-title", title); }}
-              onKeyDown={(e) => { if (e.key === "Enter") { setEditingTitle(false); localStorage.setItem("dashboard-title", title); } }}
-              className="text-lg font-bold text-gray-900 border-b-2 border-blue-400 outline-none bg-transparent w-48"
-            />
-          ) : (
-            <h1
-              className="text-lg font-bold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
-              title="클릭해서 제목 수정"
-              onClick={() => setEditingTitle(true)}
-            >
-              {title}
-            </h1>
-          )}
+          <h1 className="text-lg font-bold text-gray-900">
+            {sheet?.title ?? "주간 업무 현황"}
+          </h1>
 
           {sheet && sheet.weekKeys.length > 0 && (
             <div className="flex items-center gap-2">

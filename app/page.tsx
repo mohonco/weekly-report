@@ -134,7 +134,7 @@ function SectionTable({
                 {hasGuestCol && (
                   <td className="px-3 py-3 text-gray-700 align-top font-medium">{row.고객사명}</td>
                 )}
-                <td className={`px-3 py-3 text-gray-800 align-top font-bold ${!hasGuestCol ? "text-center" : ""}`}>{row.프로젝트명}</td>
+                <td className={`px-3 py-3 text-gray-800 align-top font-bold whitespace-pre-line ${!hasGuestCol ? "text-center" : ""}`}>{row.프로젝트명}</td>
                 <td className="px-3 py-3 text-gray-400 align-top text-sm whitespace-nowrap text-center">{formatDate(row.착수)}</td>
                 <td className="px-3 py-3 text-gray-400 align-top text-sm whitespace-nowrap text-center">{formatDate(row.마감)}</td>
                 <WeekCell content={row.weeks[currentWeek] ?? ""} />

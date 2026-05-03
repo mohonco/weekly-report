@@ -70,21 +70,13 @@ const GUBUN_STYLES: Record<string, string> = {
   PMO:      "bg-indigo-50 text-indigo-600 border-indigo-200",
 };
 
-function StatusBadge({ status, gubun }: { status: string; gubun?: string }) {
-  const statusStyle = STATUS_STYLES[status] ?? "bg-emerald-50 text-emerald-700 border-emerald-200";
-  const gubunStyle = gubun ? (GUBUN_STYLES[gubun] ?? "bg-gray-50 text-gray-500 border-gray-200") : null;
-
+function Badge({ value, styleMap }: { value: string; styleMap: Record<string, string> }) {
+  if (!value) return <span className="text-gray-300 text-xs">—</span>;
+  const style = styleMap[value] ?? "bg-gray-50 text-gray-500 border-gray-200";
   return (
-    <div className="flex flex-col items-center gap-1">
-      <span className={`inline-block px-2 py-0.5 text-xs rounded-full border whitespace-nowrap ${statusStyle}`}>
-        {status}
-      </span>
-      {gubun && gubunStyle && (
-        <span className={`inline-block px-2 py-0.5 text-xs rounded-full border whitespace-nowrap ${gubunStyle}`}>
-          {gubun}
-        </span>
-      )}
-    </div>
+    <span className={`inline-block px-2 py-0.5 text-xs rounded-full border whitespace-nowrap ${style}`}>
+      {value}
+    </span>
   );
 }
 
@@ -125,12 +117,8 @@ function SectionTable({
         <table className="w-full text-[15px] border-collapse min-w-[700px]">
           <thead>
             <tr className={color.header}>
-              <th className="px-3 py-2 text-center font-medium w-px">
-                <div className="text-[11px] leading-tight whitespace-nowrap">
-                  <div>구분1</div>
-                  <div className="opacity-70">구분2</div>
-                </div>
-              </th>
+              <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">구분1</th>
+              <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">구분2</th>
               {hasGuestCol && (
                 <th className="px-3 py-2 text-center font-medium w-36">고객사명</th>
               )}
@@ -152,7 +140,10 @@ function SectionTable({
                 }`}
               >
                 <td className="px-3 py-3 align-top text-center">
-                  <StatusBadge status={row.상태} gubun={row.구분 || undefined} />
+                  <Badge value={row.상태} styleMap={STATUS_STYLES} />
+                </td>
+                <td className="px-3 py-3 align-top text-center">
+                  <Badge value={row.구분} styleMap={GUBUN_STYLES} />
                 </td>
                 {hasGuestCol && (
                   <td className="px-3 py-3 text-gray-700 align-top font-medium">{row.고객사명}</td>

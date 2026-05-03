@@ -130,13 +130,13 @@ function SectionTable({
         <table className="w-full text-[16px] border-collapse min-w-[700px]">
           <thead>
             <tr className={color.header}>
+              <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">착수</th>
               <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">구분1</th>
               <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">구분2</th>
               {hasGuestCol && (
                 <th className="px-3 py-2 text-center font-medium w-36">고객사명</th>
               )}
               <th className="px-3 py-2 text-center font-medium w-[240px]">프로젝트명</th>
-              <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">착수</th>
               <th className="px-3 py-2 text-center font-medium w-[400px]">추진 내용</th>
             </tr>
           </thead>
@@ -152,6 +152,7 @@ function SectionTable({
                     : "bg-white hover:bg-gray-50/60"
                 }`}
               >
+                <td className="px-3 py-3 text-gray-400 align-top text-sm whitespace-nowrap text-center">{formatDate(row.착수)}</td>
                 <td className="px-3 py-3 align-top text-center">
                   <Badge value={row.상태} styleMap={STATUS_STYLES} />
                 </td>
@@ -162,7 +163,6 @@ function SectionTable({
                   <td className="px-3 py-3 text-gray-700 align-top font-medium">{row.고객사명}</td>
                 )}
                 <td className={`px-3 py-3 text-gray-800 align-top font-bold whitespace-pre-line ${!hasGuestCol ? "text-center" : ""}`}>{row.프로젝트명}</td>
-                <td className="px-3 py-3 text-gray-400 align-top text-sm whitespace-nowrap text-center">{formatDate(row.착수)}</td>
                 <WeekCell content={row.weeks[currentWeek] ?? ""} />
               </tr>
             ))}

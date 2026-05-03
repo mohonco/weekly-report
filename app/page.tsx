@@ -124,7 +124,7 @@ function SectionTable({
               )}
               <th className="px-3 py-2 text-center font-medium w-[190px]">프로젝트명</th>
               <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">착수</th>
-              <th className="px-3 py-2 text-center font-medium w-60">추진 내용</th>
+              <th className="px-3 py-2 text-center font-medium w-[480px]">추진 내용</th>
             </tr>
           </thead>
           <tbody>

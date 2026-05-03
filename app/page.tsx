@@ -125,7 +125,12 @@ function SectionTable({
         <table className="w-full text-[15px] border-collapse min-w-[700px]">
           <thead>
             <tr className={color.header}>
-              <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">상태</th>
+              <th className="px-3 py-2 text-center font-medium w-px">
+                <div className="text-[11px] leading-tight whitespace-nowrap">
+                  <div>구분1</div>
+                  <div className="opacity-70">구분2</div>
+                </div>
+              </th>
               {hasGuestCol && (
                 <th className="px-3 py-2 text-center font-medium w-36">고객사명</th>
               )}
@@ -207,7 +212,7 @@ function parseCSV(text: string): ParsedSheet {
 export default function DashboardPage() {
   const [sheet, setSheet] = useState<ParsedSheet | null>(null);
   const [selectedWeek, setSelectedWeek] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<"전체" | "진행중" | "완료">("전체");
+  const [statusFilter, setStatusFilter] = useState<string>("전체");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -238,10 +243,16 @@ export default function DashboardPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const gubun1Options = sheet ? [...new Set(sheet.rows.map((r) => r.상태).filter(Boolean))] : [];
+  const gubun2Options = sheet ? [...new Set(sheet.rows.map((r) => r.구분).filter(Boolean))] : [];
+
   const sectionRows = (section: string) =>
-    (sheet?.rows ?? []).filter(
-      (r) => r.섹션 === section && (statusFilter === "전체" || r.상태 === statusFilter)
-    );
+    (sheet?.rows ?? []).filter((r) => {
+      if (r.섹션 !== section) return false;
+      if (statusFilter === "전체") return true;
+      if (gubun1Options.includes(statusFilter)) return r.상태 === statusFilter;
+      return r.구분 === statusFilter;
+    });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -279,15 +290,27 @@ export default function DashboardPage() {
             <div className="w-px h-3 bg-gray-600" />
 
             <div className="flex items-center gap-1.5">
-              <label className="text-xs text-gray-500">상태</label>
+              <label className="text-xs text-gray-500">구분</label>
               <select
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as "전체" | "진행중" | "완료")}
+                onChange={(e) => setStatusFilter(e.target.value)}
                 className="text-xs bg-transparent text-gray-300 focus:outline-none cursor-pointer"
               >
-                {(["전체", "진행중", "완료"] as const).map((s) => (
-                  <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
-                ))}
+                <option value="전체" className="bg-gray-800 text-white">전체</option>
+                {gubun1Options.length > 0 && (
+                  <optgroup label="구분1" className="bg-gray-800 text-gray-400">
+                    {gubun1Options.map((s) => (
+                      <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
+                    ))}
+                  </optgroup>
+                )}
+                {gubun2Options.length > 0 && (
+                  <optgroup label="구분2" className="bg-gray-800 text-gray-400">
+                    {gubun2Options.map((s) => (
+                      <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
+                    ))}
+                  </optgroup>
+                )}
               </select>
             </div>
 

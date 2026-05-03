@@ -136,8 +136,8 @@ function SectionTable({
               {hasGuestCol && (
                 <th className="px-3 py-2 text-center font-medium w-36">고객사명</th>
               )}
-              <th className="px-3 py-2 text-center font-medium w-[240px]">프로젝트명</th>
-              <th className="px-3 py-2 text-center font-medium w-[400px]">추진 내용</th>
+              <th className="px-3 py-2 text-center font-medium w-[210px]">프로젝트명</th>
+              <th className="px-3 py-2 text-center font-medium w-[430px]">추진 내용</th>
             </tr>
           </thead>
           <tbody>

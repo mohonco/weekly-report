@@ -203,7 +203,8 @@ function parseCSV(text: string): ParsedSheet {
 export default function DashboardPage() {
   const [sheet, setSheet] = useState<ParsedSheet | null>(null);
   const [selectedWeek, setSelectedWeek] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<string>("전체");
+  const [gubun1Filter, setGubun1Filter] = useState<string>("전체");
+  const [gubun2Filter, setGubun2Filter] = useState<string>("전체");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -240,9 +241,9 @@ export default function DashboardPage() {
   const sectionRows = (section: string) =>
     (sheet?.rows ?? []).filter((r) => {
       if (r.섹션 !== section) return false;
-      if (statusFilter === "전체") return true;
-      if (gubun1Options.includes(statusFilter)) return r.상태 === statusFilter;
-      return r.구분 === statusFilter;
+      if (gubun1Filter !== "전체" && r.상태 !== gubun1Filter) return false;
+      if (gubun2Filter !== "전체" && r.구분 !== gubun2Filter) return false;
+      return true;
     });
 
   return (
@@ -281,27 +282,32 @@ export default function DashboardPage() {
             <div className="w-px h-3 bg-gray-600" />
 
             <div className="flex items-center gap-1.5">
-              <label className="text-xs text-gray-500">구분</label>
+              <label className="text-xs text-gray-500">구분1</label>
               <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
+                value={gubun1Filter}
+                onChange={(e) => setGubun1Filter(e.target.value)}
                 className="text-xs bg-transparent text-gray-300 focus:outline-none cursor-pointer"
               >
                 <option value="전체" className="bg-gray-800 text-white">전체</option>
-                {gubun1Options.length > 0 && (
-                  <optgroup label="구분1" className="bg-gray-800 text-gray-400">
-                    {gubun1Options.map((s) => (
-                      <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
-                    ))}
-                  </optgroup>
-                )}
-                {gubun2Options.length > 0 && (
-                  <optgroup label="구분2" className="bg-gray-800 text-gray-400">
-                    {gubun2Options.map((s) => (
-                      <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
-                    ))}
-                  </optgroup>
-                )}
+                {gubun1Options.map((s) => (
+                  <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="w-px h-3 bg-gray-600" />
+
+            <div className="flex items-center gap-1.5">
+              <label className="text-xs text-gray-500">구분2</label>
+              <select
+                value={gubun2Filter}
+                onChange={(e) => setGubun2Filter(e.target.value)}
+                className="text-xs bg-transparent text-gray-300 focus:outline-none cursor-pointer"
+              >
+                <option value="전체" className="bg-gray-800 text-white">전체</option>
+                {gubun2Options.map((s) => (
+                  <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
+                ))}
               </select>
             </div>
 

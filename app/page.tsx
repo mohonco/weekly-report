@@ -20,17 +20,23 @@ interface ParsedSheet {
   title: string;
 }
 
-const SECTIONS = ["하이브리드러닝 제안", "APL", "기타"];
+const SECTIONS = ["하이브리드러닝 제안", "하이브리드러닝 수행", "APL", "기타"];
 
 const SECTION_COLORS: Record<string, { header: string }> = {
   "하이브리드러닝 제안": { header: "bg-[#7B3535] text-white" },
+  "하이브리드러닝 수행": { header: "bg-[#5A3A7A] text-white" },
   APL:                  { header: "bg-[#2E4A7A] text-white" },
   기타:                 { header: "bg-[#3D5C3D] text-white" },
 };
 
 function formatDate(date: string): string {
-  const match = date.match(/\d{4}-(\d{2})-(\d{2})/);
-  if (match) return `${Number(match[1])}/${Number(match[2])}`;
+  if (!date) return "";
+  // YYYY-MM-DD
+  const isoMatch = date.match(/\d{4}-(\d{2})-(\d{2})/);
+  if (isoMatch) return `${Number(isoMatch[1])}/${Number(isoMatch[2])}`;
+  // M. D 형식 (예: "4. 30")
+  const kdMatch = date.match(/^(\d{1,2})\.\s*(\d{1,2})$/);
+  if (kdMatch) return `${kdMatch[1]}/${kdMatch[2]}`;
   return date;
 }
 
@@ -49,18 +55,36 @@ function formatWeekLabel(key: string): string {
   return `${month}월 ${weekNum}주 (${month}/${day}-${fm}/${fd})`;
 }
 
-function StatusBadge({ status }: { status: string }) {
-  if (status === "완료") {
-    return (
-      <span className="inline-block px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-500 border border-gray-200 whitespace-nowrap">
-        완료
-      </span>
-    );
-  }
+const STATUS_STYLES: Record<string, string> = {
+  진행중: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  완료:   "bg-gray-100 text-gray-500 border-gray-200",
+  대기:   "bg-amber-50 text-amber-600 border-amber-200",
+};
+
+const GUBUN_STYLES: Record<string, string> = {
+  결과대기: "bg-sky-50 text-sky-600 border-sky-200",
+  수주:     "bg-blue-50 text-blue-700 border-blue-200",
+  실주:     "bg-red-50 text-red-500 border-red-200",
+  연간:     "bg-violet-50 text-violet-600 border-violet-200",
+  단건:     "bg-orange-50 text-orange-600 border-orange-200",
+  PMO:      "bg-indigo-50 text-indigo-600 border-indigo-200",
+};
+
+function StatusBadge({ status, gubun }: { status: string; gubun?: string }) {
+  const statusStyle = STATUS_STYLES[status] ?? "bg-emerald-50 text-emerald-700 border-emerald-200";
+  const gubunStyle = gubun ? (GUBUN_STYLES[gubun] ?? "bg-gray-50 text-gray-500 border-gray-200") : null;
+
   return (
-    <span className="inline-block px-2 py-0.5 text-xs rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">
-      진행중
-    </span>
+    <div className="flex flex-col items-center gap-1">
+      <span className={`inline-block px-2 py-0.5 text-xs rounded-full border whitespace-nowrap ${statusStyle}`}>
+        {status}
+      </span>
+      {gubun && gubunStyle && (
+        <span className={`inline-block px-2 py-0.5 text-xs rounded-full border whitespace-nowrap ${gubunStyle}`}>
+          {gubun}
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -93,7 +117,6 @@ function SectionTable({
 }) {
   const color = SECTION_COLORS[section] ?? { header: "bg-gray-700 text-white" };
   const hasGuestCol = rows.some((r) => r.고객사명);
-  const hasGubunCol = rows.some((r) => r.구분);
 
   return (
     <div className="mb-8">
@@ -103,15 +126,11 @@ function SectionTable({
           <thead>
             <tr className={color.header}>
               <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">상태</th>
-              {hasGubunCol && (
-                <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">구분</th>
-              )}
               {hasGuestCol && (
                 <th className="px-3 py-2 text-center font-medium w-36">고객사명</th>
               )}
               <th className="px-3 py-2 text-center font-medium w-[190px]">프로젝트명</th>
               <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">착수</th>
-              <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">마감</th>
               <th className="px-3 py-2 text-center font-medium w-60">추진 내용</th>
             </tr>
           </thead>
@@ -122,21 +141,19 @@ function SectionTable({
                 className={`border-t border-gray-100 ${
                   row.상태 === "완료"
                     ? "bg-gray-50 opacity-60"
+                    : row.상태 === "대기"
+                    ? "bg-amber-50/20 hover:bg-amber-50/40"
                     : "bg-white hover:bg-gray-50/60"
                 }`}
               >
                 <td className="px-3 py-3 align-top text-center">
-                  <StatusBadge status={row.상태} />
+                  <StatusBadge status={row.상태} gubun={row.구분 || undefined} />
                 </td>
-                {hasGubunCol && (
-                  <td className="px-3 py-3 text-gray-500 align-top text-sm text-center">{row.구분}</td>
-                )}
                 {hasGuestCol && (
                   <td className="px-3 py-3 text-gray-700 align-top font-medium">{row.고객사명}</td>
                 )}
                 <td className={`px-3 py-3 text-gray-800 align-top font-bold whitespace-pre-line ${!hasGuestCol ? "text-center" : ""}`}>{row.프로젝트명}</td>
                 <td className="px-3 py-3 text-gray-400 align-top text-sm whitespace-nowrap text-center">{formatDate(row.착수)}</td>
-                <td className="px-3 py-3 text-gray-400 align-top text-sm whitespace-nowrap text-center">{formatDate(row.마감)}</td>
                 <WeekCell content={row.weeks[currentWeek] ?? ""} />
               </tr>
             ))}
@@ -220,12 +237,6 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const currentIdx = sheet?.weekKeys.indexOf(selectedWeek) ?? -1;
-  const prevWeek =
-    sheet && currentIdx >= 0 && currentIdx + 1 < sheet.weekKeys.length
-      ? sheet.weekKeys[currentIdx + 1]
-      : null;
 
   const sectionRows = (section: string) =>
     (sheet?.rows ?? []).filter(

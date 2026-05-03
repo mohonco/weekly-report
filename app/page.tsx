@@ -187,8 +187,8 @@ function parseCSV(text: string): ParsedSheet {
       weekKeys.forEach((k) => { weeks[k] = r[k]?.trim() ?? ""; });
       return {
         섹션: r["섹션"]?.trim() ?? "",
-        상태: r["상태"]?.trim() ?? "",
-        구분: r["구분"]?.trim() ?? "",
+        상태: r["구분1"]?.trim() ?? "",
+        구분: r["구분2"]?.trim() ?? "",
         고객사명: r["고객사명"]?.trim() ?? "",
         프로젝트명: r["프로젝트명"]?.trim() ?? "",
         착수: r["착수"]?.trim() ?? "",

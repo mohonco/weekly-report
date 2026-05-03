@@ -80,17 +80,26 @@ function Badge({ value, styleMap }: { value: string; styleMap: Record<string, st
   );
 }
 
+function renderBold(text: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) =>
+    part.startsWith("**") && part.endsWith("**")
+      ? <strong key={i}>{part.slice(2, -2)}</strong>
+      : <span key={i}>{part}</span>
+  );
+}
+
 function WeekCell({ content }: { content: string }) {
   if (!content) {
     return <td className="px-3 py-3 text-gray-300 text-sm align-top">—</td>;
   }
-  const lines = content.split("\n").filter(Boolean);
+  const lines = content.split("\n").filter((l) => l.trim());
   return (
     <td className="px-3 py-3 text-sm text-gray-700 align-top">
       <ul className="space-y-0.5">
         {lines.map((line, i) => (
           <li key={i} className="leading-snug">
-            · {line}
+            {renderBold(line)}
           </li>
         ))}
       </ul>

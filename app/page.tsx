@@ -91,11 +91,11 @@ function renderBold(text: string) {
 
 function WeekCell({ content }: { content: string }) {
   if (!content) {
-    return <td className="px-3 py-3 text-gray-300 text-sm align-top">—</td>;
+    return <td className="px-3 py-3 text-gray-300 align-top">—</td>;
   }
   const lines = content.split("\n");
   return (
-    <td className="px-3 py-3 text-sm text-gray-700 align-top">
+    <td className="px-3 py-3 text-gray-700 align-top">
       <ul className="space-y-0.5">
         {lines.map((line, i) =>
           line.trim() === "" ? (

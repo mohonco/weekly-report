@@ -281,35 +281,41 @@ export default function DashboardPage() {
 
             <div className="w-px h-3 bg-gray-600" />
 
-            <div className="flex items-center gap-1.5">
-              <label className="text-xs text-gray-500">구분1</label>
-              <select
-                value={gubun1Filter}
-                onChange={(e) => setGubun1Filter(e.target.value)}
-                className="text-xs bg-transparent text-gray-300 focus:outline-none cursor-pointer"
-              >
-                <option value="전체" className="bg-gray-800 text-white">전체</option>
-                {gubun1Options.map((s) => (
-                  <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
-                ))}
-              </select>
-            </div>
+            {sheet && (
+              <>
+                <div className="flex items-center gap-1.5">
+                  <label className="text-xs text-gray-500">구분1</label>
+                  <select
+                    key={`g1-${gubun1Options.join(",")}`}
+                    value={gubun1Filter}
+                    onChange={(e) => setGubun1Filter(e.target.value)}
+                    className="text-xs bg-transparent text-gray-300 focus:outline-none cursor-pointer"
+                  >
+                    <option value="전체" className="bg-gray-800 text-white">전체</option>
+                    {gubun1Options.map((s) => (
+                      <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
+                    ))}
+                  </select>
+                </div>
 
-            <div className="w-px h-3 bg-gray-600" />
+                <div className="w-px h-3 bg-gray-600" />
 
-            <div className="flex items-center gap-1.5">
-              <label className="text-xs text-gray-500">구분2</label>
-              <select
-                value={gubun2Filter}
-                onChange={(e) => setGubun2Filter(e.target.value)}
-                className="text-xs bg-transparent text-gray-300 focus:outline-none cursor-pointer"
-              >
-                <option value="전체" className="bg-gray-800 text-white">전체</option>
-                {gubun2Options.map((s) => (
-                  <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
-                ))}
-              </select>
-            </div>
+                <div className="flex items-center gap-1.5">
+                  <label className="text-xs text-gray-500">구분2</label>
+                  <select
+                    key={`g2-${gubun2Options.join(",")}`}
+                    value={gubun2Filter}
+                    onChange={(e) => setGubun2Filter(e.target.value)}
+                    className="text-xs bg-transparent text-gray-300 focus:outline-none cursor-pointer"
+                  >
+                    <option value="전체" className="bg-gray-800 text-white">전체</option>
+                    {gubun2Options.map((s) => (
+                      <option key={s} value={s} className="bg-gray-800 text-white">{s}</option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
 
             <a
               href="https://docs.google.com/spreadsheets/d/1_opr1pCueFHjziIhov8xnGOgPrfI5QwZaYfV9Ei-MRU/edit"

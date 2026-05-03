@@ -93,15 +93,19 @@ function WeekCell({ content }: { content: string }) {
   if (!content) {
     return <td className="px-3 py-3 text-gray-300 text-sm align-top">—</td>;
   }
-  const lines = content.split("\n").filter((l) => l.trim());
+  const lines = content.split("\n");
   return (
     <td className="px-3 py-3 text-sm text-gray-700 align-top">
       <ul className="space-y-0.5">
-        {lines.map((line, i) => (
-          <li key={i} className="leading-snug">
-            {renderBold(line)}
-          </li>
-        ))}
+        {lines.map((line, i) =>
+          line.trim() === "" ? (
+            <li key={i} className="h-2" />
+          ) : (
+            <li key={i} className="leading-snug">
+              {renderBold(line)}
+            </li>
+          )
+        )}
       </ul>
     </td>
   );
@@ -123,7 +127,7 @@ function SectionTable({
     <div className="mb-8">
       <h2 className="text-[19px] font-bold mb-2 text-gray-800">{section}</h2>
       <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-        <table className="w-full text-[15px] border-collapse min-w-[700px]">
+        <table className="w-full text-[16px] border-collapse min-w-[700px]">
           <thead>
             <tr className={color.header}>
               <th className="px-3 py-2 text-center font-medium whitespace-nowrap w-px">구분1</th>
